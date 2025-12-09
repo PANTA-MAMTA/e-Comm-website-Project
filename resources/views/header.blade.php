@@ -1,38 +1,43 @@
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <div class="container">
 
-        <!-- Brand and toggle for mobile -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-menu">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
+        <!-- BRAND -->
+        <a class="navbar-brand fw-bold" href="#">
+            E-Comm
+        </a>
 
-            <a class="navbar-brand" href="#">E-Comm</a>
-        </div>
+        <!-- MOBILE TOGGLE -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-        <!-- Navbar Content -->
-        <div class="collapse navbar-collapse" id="navbar-menu">
+        <!-- NAV CONTENT -->
+        <div class="collapse navbar-collapse" id="navbarMenu">
 
             <!-- LEFT MENU -->
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#">Orders</a></li>
-                <li><a href="#">More</a></li>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Orders</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">More</a>
+                </li>
             </ul>
 
-            <!-- SEARCH FORM CENTER -->
-            <form action="/search" class="navbar-form navbar-left">
-                <div class="form-group">
-                    <input type="text" name="query" class="form-control search-box" placeholder="Search">
-                </div>
-                <button type="submit" class="btn btn-default">Search</button>
+            <!-- SEARCH BAR -->
+            <form class="d-flex me-3" action="/search">
+                <input class="form-control me-2" type="search" name="query" placeholder="Search">
+                <button class="btn btn-outline-primary" type="submit">Search</button>
             </form>
 
             <!-- RIGHT MENU -->
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Add To Cart</a></li>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Add To Cart</a>
+                </li>
             </ul>
 
         </div>
