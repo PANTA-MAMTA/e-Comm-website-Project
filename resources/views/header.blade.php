@@ -28,7 +28,7 @@
             </ul>
 
             <!-- SEARCH BAR -->
-            <form class="d-flex me-3" action="/search">
+            <form action='/search' class="d-flex me-3" action="/search">
                 <input class="form-control me-2" type="search" name="query" placeholder="Search">
                 <button class="btn btn-outline-primary" type="submit">Search</button>
             </form>

@@ -21,13 +21,15 @@
 
             @foreach ($products as $item)
                 <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-                    <img src="{{ $item['gallery'] }}" class="d-block mx-auto carousel-img" alt="{{ $item['name'] }}">
+                   <a href="detail/{{$item['id']}}">
+                 <img src="{{ $item['gallery'] }}" class="d-block mx-auto carousel-img" alt="{{ $item['name'] }}">
                     
                     <!-- Caption below image -->
                     <div class="carousel-caption-below">
                         <h3>{{ $item['name'] }}</h3>
                         <p>{{ $item['description'] }}</p>
                     </div>
+                </a>
                 </div>
             @endforeach
 
@@ -43,6 +45,23 @@
             <span class="carousel-control-next-icon"></span>
             <span class="visually-hidden">Next</span>
         </button>
+
+    </div>
+  <div class="trending-wrapper">
+    <h1>Trending Products</h1>
+
+    <div class="trending-container">
+        @foreach ($products->take(5) as $item)
+            <div class="trending-item">
+                <a href="detail/{{ $item['id'] }}">
+                    <img class="trending-img" src="{{ $item['gallery'] }}">
+                    <h3>{{ $item['name'] }}</h3>
+                </a>
+            </div>
+        @endforeach
+    </div>
+</div>
+
 
     </div>
 
