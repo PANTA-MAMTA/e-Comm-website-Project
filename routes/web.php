@@ -5,7 +5,10 @@ use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 
-Route::view('/login', 'login');
+// SHOW LOGIN PAGE
+Route::get('/login', function () {
+    return view('login');
+});
 
 Route::get('/logout', function () {
     Session::forget('user');

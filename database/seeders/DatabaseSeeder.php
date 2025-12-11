@@ -14,13 +14,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Call your custom user seeder
-        $this->call(User_Seeder::class);
-
-        // Optional example user
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        $this->call([
+                ProductSeeder::class,
+            UserSeeder::class,   // ← correct seeder name
+        ]);
     }
 }

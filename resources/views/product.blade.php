@@ -3,67 +3,54 @@
 
 <div class="custom-product">
 
+    <!-- Slider -->
     <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
 
-        <!-- Indicators -->
         <div class="carousel-indicators">
             @foreach ($products as $index => $item)
                 <button type="button"
-                        data-bs-target="#myCarousel"
-                        data-bs-slide-to="{{ $index }}"
-                        class="{{ $index == 0 ? 'active' : '' }}">
+                    data-bs-target="#myCarousel"
+                    data-bs-slide-to="{{ $index }}"
+                    class="{{ $index == 0 ? 'active' : '' }}">
                 </button>
             @endforeach
         </div>
 
-        <!-- Carousel Items -->
-        <div class="carousel-inner text-center">
-
+        <div class="carousel-inner">
             @foreach ($products as $item)
                 <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-                    <a href="/detail/{{ $item->id }}">
-                        <img src="{{ $item->gallery }}"
-                             class="d-block mx-auto carousel-img"
-                             alt="{{ $item->name }}">
-                        
-                        <div class="carousel-caption-below">
+                    <a href="detail/{{ $item->id }}">
+                        <img src="{{ $item->gallery }}" class="d-block w-100 slider-img">
+                        <div class="carousel-caption">
                             <h3>{{ $item->name }}</h3>
                             <p>{{ $item->description }}</p>
                         </div>
                     </a>
                 </div>
             @endforeach
-
         </div>
 
-        <!-- Controls -->
         <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon"></span>
-            <span class="visually-hidden">Previous</span>
         </button>
 
         <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
             <span class="carousel-control-next-icon"></span>
-            <span class="visually-hidden">Next</span>
         </button>
 
     </div>
 
-    {{-- Trending --}}
-    <div class="trending-wrapper mt-5">
+    <!-- Trending -->
+    <div class="trending-wrapper">
         <h1>Trending Products</h1>
-
-        <div class="row">
-            @foreach ($products->take(5) as $item)
-                <div class="col-sm-4 col-md-3 trending-item mt-4 text-center">
-                    <a href="/detail/{{ $item->id }}">
-                        <img class="trending-img" src="{{ $item->gallery }}" alt="{{ $item->name }}">
-                        <h4>{{ $item->name }}</h4>
-                    </a>
-                </div>
-            @endforeach
-        </div>
-
+        @foreach ($products as $item)
+            <div class="trending-item">
+                <a href="detail/{{ $item->id }}">
+                    <img class="trending-image" src="{{ $item->gallery }}">
+                    <h3>{{ $item->name }}</h3>
+                </a>
+            </div>
+        @endforeach
     </div>
 
 </div>
