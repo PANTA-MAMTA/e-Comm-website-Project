@@ -14,19 +14,19 @@
                     <div class="row searched-item cart-list-devider">
 
                         <div class="col-sm-3">
-                            <a href="/detail/{{ $item->id }}">
-                                <img src="{{ $item->gallery }}"
+                            <a href="/detail/{{ $item['product_id'] }}">
+                                <img src="{{ $item['image'] }}"
                                      class="trending-img d-block mx-auto">
                             </a>
                         </div>
 
                         <div class="col-sm-3">
-                            <h2>{{ $item->name }}</h2>
-                            <h5>{{ $item->description }}</h5>
+                            <h2>{{ $item['name'] }}</h2>
+                            <h5>Price: Rs {{ $item['price'] }}</h5>
                         </div>
 
                         <div class="col-sm-3">
-                            <a href="/removecart/{{ $item->cart_id }}"
+                            <a href="/removecart/{{ $item['product_id'] }}"
                                class="btn btn-warning">
                                 Remove From Cart
                             </a>

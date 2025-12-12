@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use App\Models\Cart;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -25,59 +23,81 @@ class ProductController extends Controller
         return view('detail', ['product' => $data]);
     }
 
-    // Search
+    // Search product
     function search(Request $req)
     {
-        $data = Product::where('name', 'like', '%' . $req->query . '%')->get();
+        $data = Product::where('name', 'like', '%' . $req->search . '%')->get();
         return view('search', ['products' => $data]);
     }
 
-    // Add to cart
+    // Add to Session Cart  ✅ UPDATED
     function addToCart(Request $req)
     {
-        if (Session::has('user')) {
-
-            $cart = new Cart();
-            $cart->user_id = Session::get('user')['id'];
-            $cart->product_id = $req->product_id;
-            $cart->save();
-
-            return redirect('/');
-        } else {
+        if (!Session::has('user')) {
             return redirect('/login');
         }
+
+        $product = Product::find($req->product_id);
+        $cart = Session::get('cart', []);
+
+        if (isset($cart[$req->product_id])) {
+            $cart[$req->product_id]['quantity']++;
+        } else {
+            $cart[$req->product_id] = [
+                "product_id"  => $req->product_id,
+                "name"        => $product->name,
+                "price"       => $product->price,
+                "image"       => $product->gallery,
+                "description" => $product->description,   // ✅ Added line
+                "quantity"    => 1
+            ];
+        }
+
+        Session::put('cart', $cart);
+        return redirect('/')->with('success', 'Product added to cart');
     }
 
     // Cart List
     function cartList()
     {
-        $userId = Session::get('user')['id'];
+        if (!Session::has('user')) {
+            return redirect('/login');
+        }
 
-        $data = DB::table('cart')
-            ->join('products', 'cart.product_id', '=', 'products.id')
-            ->select('products.*', 'cart.id as cart_id')
-            ->where('cart.user_id', $userId)
-            ->get();
-
-        return view('cartlist', ['products' => $data]);
+        $cart = Session::get('cart', []);
+        return view('cartlist', ['products' => $cart]);
     }
 
-    // Remove cart item
+    // Remove item from session cart
     function removeCart($id)
     {
-        Cart::destroy($id);
-        return redirect('cartlist');
+        if (!Session::has('user')) {
+            return redirect('/login');
+        }
+
+        $cart = Session::get('cart', []);
+
+        if (isset($cart[$id])) {
+            unset($cart[$id]);
+        }
+
+        Session::put('cart', $cart);
+        return redirect('/cartlist');
     }
 
-    // Order Now
+    // Order Now Page
     function orderNow()
     {
-        $userId = Session::get('user')['id'];
+        if (!Session::has('user')) {
+            return redirect('/login');
+        }
 
-        $total = DB::table('cart')
-            ->join('products', 'cart.product_id', '=', 'products.id')
-            ->where('cart.user_id', $userId)
-            ->sum('products.price');
+        $cart = Session::get('cart', []);
+        $total = 0;
+
+        foreach ($cart as $item) {
+            $total += $item['price'] * $item['quantity'];
+        }
 
         return view('ordernow', ['total' => $total]);
     }
@@ -85,13 +105,22 @@ class ProductController extends Controller
     // Place order
     function orderPlace(Request $req)
     {
-        $userId = Session::get('user')['id'];
-        $allCart = Cart::where('user_id', $userId)->get();
+        if (!Session::has('user')) {
+            return redirect('/login');
+        }
 
-        foreach ($allCart as $cart) {
+        $req->validate([
+            'address' => 'required',
+            'payment' => 'required'
+        ]);
+
+        $userId = Session::get('user')['id'];
+        $cart = Session::get('cart', []);
+
+        foreach ($cart as $item) {
             $order = new Order();
-            $order->product_id = $cart->product_id;
-            $order->user_id = $cart->user_id;
+            $order->product_id = $item['product_id'];
+            $order->user_id = $userId;
             $order->address = $req->address;
             $order->status = "pending";
             $order->payment_method = $req->payment;
@@ -99,19 +128,21 @@ class ProductController extends Controller
             $order->save();
         }
 
-        Cart::where('user_id', $userId)->delete();
-
-        return redirect('/');
+        Session::forget('cart');
+        return redirect('/')->with('success', 'Order placed successfully');
     }
 
-    // My Orders
+    // My Orders list
     function myOrder()
     {
+        if (!Session::has('user')) {
+            return redirect('/login');
+        }
+
         $userId = Session::get('user')['id'];
 
-        $orders = DB::table('orders')
+        $orders = Order::where('user_id', $userId)
             ->join('products', 'orders.product_id', '=', 'products.id')
-            ->where('orders.user_id', $userId)
             ->select('products.*', 'orders.*')
             ->get();
 
